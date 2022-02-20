@@ -1,5 +1,5 @@
-import {AssesmentService} from './utils-ts/assessment';
-import { Matrix } from './utils-ts/matrix';
+import {AssesmentService} from './utils/assessment';
+import { Matrix } from './utils/matrix';
 
 const criteriaMatrix: Matrix = [
   [1, 0.333, 0.5, 0.5],   // Feature 1 Weight
