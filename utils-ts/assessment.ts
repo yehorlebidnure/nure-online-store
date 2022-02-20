@@ -1,13 +1,10 @@
-const MatrixService = require('./matrix');
-const Logger = require('./logger');
+import {MatrixService, Matrix} from './matrix';
+import {Logger} from './logger';
 
-module.exports = class AssesmentService {
+export class AssesmentService {
 
     /**
      * Finds index of optimal choice (column number).
-     * @param {number[][]} criteriaMatrix
-     * @param {number[][]} featuresMatrix
-     * 
      * @description
      * criteriaMatrix = [
      *   [1, 0.333, 0.5, 0.5],   // Feature 1 Weight
@@ -24,14 +21,14 @@ module.exports = class AssesmentService {
      *   [4,    2,    7,    4 ]   // Feature 4 values
      * ];
      */
-    static findOptimalChoice(criteriaMatrix, featuresMatrix) {
-        if (!MatrixService.isValidStrict(featuresMatrix, 'number') || MatrixService.includes(featuresMatrix, 0)) {
+    static findOptimalChoice(criteriaMatrix: Matrix, featuresMatrix: Matrix): number {
+        if (!MatrixService.isValid(featuresMatrix) || MatrixService.includes(featuresMatrix, 0)) {
             const message = `AssesmentService.run: "featuresMatrix" is not valid matrix.`;
             Logger.error(message, featuresMatrix);
             throw new Error(message);
         }
 
-        if (!MatrixService.isValidStrict(criteriaMatrix, 'number')) {
+        if (!MatrixService.isValid(criteriaMatrix)) {
             const message = `AssesmentService.run: "criteriaMatrix" is not valid matrix.`;
             Logger.error(message, criteriaMatrix);
             throw new Error(message);
@@ -68,12 +65,12 @@ module.exports = class AssesmentService {
 
     /**
      * Calculates real weight factor of alternatives.
-     * @param   {number}     numberOfAlternatives 
-     * @param   {number[]}   criteriaOPRVector 
-     * @param   {number[][]} featureOPRVectors 
-     * @returns {number[]}   Result
      */
-    static _getRelWeightFactorsOfAlt(numberOfAlternatives, criteriaOPRVector, featureOPRVectors,) {
+    static _getRelWeightFactorsOfAlt(
+        numberOfAlternatives: number,
+        criteriaOPRVector: number[],
+        featureOPRVectors: Matrix
+    ): number[] {
         const W = [];
         for (let i = 0; i < numberOfAlternatives; i++) {
             const value = criteriaOPRVector.reduce((p, c, idx) => p + c * featureOPRVectors[idx][i], 0);
@@ -84,40 +81,32 @@ module.exports = class AssesmentService {
 
     /**
      * Find index of max value in a row.
-     * @param   {number[]} row 
-     * @returns {number}
      */
-    static _findMaxValueIdx(row) {
+    static _findMaxValueIdx(row: number[]): number {
         const max = Math.max(...row);
         return row.indexOf(max);
     }
 
     /**
      * Builds OPR vector from matrix.
-     * @param   {number[][]} matrix
-     * @returns {number[]}
      */
-    static _buildOPRVector(matrix) {
+    static _buildOPRVector(matrix: Matrix): number[] {
         const normalizedMatrix = MatrixService.normalize(matrix);
         return normalizedMatrix.map(row => AssesmentService._getAvg(row));
     }
 
     /**
      * Calculates AVG for row.
-     * @param   {number[]} row
-     * @returns {number}
      */
-    static _getAvg(row) {
+    static _getAvg(row: number[]): number {
         const avg = row.reduce((prev, cur) => prev + cur) / row.length;
         return Number(avg.toFixed(2));
     }
 
     /**
      * Builds features matrix from feature row.
-     * @param   {number[]} row
-     * @returns {number[][]}
      */
-    static _buildFeatureMatrix(row) {
+    static _buildFeatureMatrix(row: number[]): Matrix {
         return row.map(cur => row.map(val => Number((cur / val).toFixed(2)) ));
     }
 

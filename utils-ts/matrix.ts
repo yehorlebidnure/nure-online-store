@@ -1,19 +1,17 @@
-const ALLOWED_STRICT_TYPES = ['string', 'number'];
+export type ALLOWED_STRICT_TYPES = 'number' | 'string';
+export type Matrix = number[][];
 
-module.exports = class MatrixService {
+export class MatrixService {
 
     /**
      * Create an empty matrix.
-     * @param   {number} rows
-     * @param   {number} cols
-     * @returns {any[][]}
      */
-    static createEmpty(rows, cols) {
-        if (typeof rows !== 'number' || isNaN(rows) || rows <= 0) {
+    static createEmpty(rows: number, cols: number): Matrix {
+        if (isNaN(rows) || rows <= 0) {
             throw new Error(`Matrix.createEmpty: "rows"(${rows}) should be positive number`);
         }
 
-        if (typeof cols !== 'number' || isNaN(cols) || cols <= 0) {
+        if (isNaN(cols) || cols <= 0) {
             throw new Error(`Matrix.createEmpty: "cols"(${cols}) should be positive number`);
         }
 
@@ -28,11 +26,9 @@ module.exports = class MatrixService {
 
     /**
      * Create a new matrix from provided matrix.
-     * @param   {any[][]} matrix
-     * @returns {any[][]}
      */
-    static copy(matrix) {
-        if (!MatrixService.isMatrixValid(matrix)) {
+    static copy(matrix: Matrix): Matrix {
+        if (!MatrixService.isValid(matrix)) {
             throw new Error('MatrixService.copy: "matrix" is invalid.')
         }
 
@@ -52,20 +48,16 @@ module.exports = class MatrixService {
 
     /**
      * Set matrix value.
-     * @param {any[][]} matrix 
-     * @param {any} value 
-     * @param {number} row 
-     * @param {number} col 
      */
-    static setValue(matrix, value, row, col) {
+    static setValue(matrix: Matrix, value: any, row: number, col: number) {
         const matrixRows = matrix.length;
         const matrixCols = matrix[0].length;
 
-        if (typeof row !== 'number' || isNaN(row) || row < 0 || row >= matrixRows) {
+        if (isNaN(row) || row < 0 || row >= matrixRows) {
             throw new Error(`MatrixService.setValue: "row"(${row}) should be number in matrix range`);
         }
 
-        if (typeof col !== 'number' || isNaN(col) || col < 0 || col >= matrixCols) {
+        if (isNaN(col) || col < 0 || col >= matrixCols) {
             throw new Error(`MatrixService.setValue: "col"(${col}) should be number in matrix range`);
         }
 
@@ -74,47 +66,11 @@ module.exports = class MatrixService {
 
     /**
      * Check if matrix valid.
-     * @param {any[][]} matrix
-     * @return {boolean}
      */
-     static isValid(matrix) {
-        if (!Array.isArray(matrix)) {
-            return false;
-        }
-
+     static isValid(matrix: Matrix): boolean {
         for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
             if (!Array.isArray(matrix[rowIndex]) || matrix[rowIndex].length !== matrix[0].length) {
                 return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if matrix valid.
-     * @param {any[][]} matrix
-     * @param {'number'|'string'} [STRICT_TYPE]
-     * @return {boolean}
-     */
-     static isValidStrict(matrix, STRICT_TYPE) {
-        if (!ALLOWED_STRICT_TYPES.includes(STRICT_TYPE)) {
-            throw new Error(`MatrixService.isValid: "STRICT_TYPE"(${STRICT_TYPE}) is not valid. Allowed: ${ALLOWED_STRICT_TYPES}`)
-        }
-
-        if (!Array.isArray(matrix)) {
-            return false;
-        }
-
-        for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
-            if (!Array.isArray(matrix[rowIndex]) || matrix[rowIndex].length !== matrix[0].length) {
-                return false;
-            }
-
-            for (let colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
-                if (typeof matrix[rowIndex][colIndex] !== STRICT_TYPE) {
-                    return false;
-                }
             }
         }
 
@@ -123,10 +79,8 @@ module.exports = class MatrixService {
 
     /**
      * Check if matrix includes value
-     * @param {any[][]} matrix 
-     * @param {any} value 
      */
-    static includes(matrix, value) {
+    static includes(matrix: Matrix, value: any): boolean {
         for (let i = 0; i < matrix.length; i++) {
             for (let j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] === value) {
@@ -139,12 +93,9 @@ module.exports = class MatrixService {
 
     /**
      * Get normilized matrix.
-     * @param {number[]} matrix
-     * @returns {number[][]}
      */
-    static normalize(matrix) {
-        if (!this.isValidStrict(matrix, "number")) {
-            console.log(matrix);
+    static normalize(matrix: Matrix): Matrix {
+        if (!MatrixService.isValid(matrix)) {
             throw new Error(`MatrixService.normalize: "matrix" is not valid.`);
         }
 
