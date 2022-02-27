@@ -2,13 +2,7 @@ import {Matrix, MatrixService} from './matrix';
 import {Logger} from './logger';
 
 /*
-    Find optimal choice by item total rate.
-
-    ╔═══╦═══╗
-    ║   ║   ║
-    ╠═══╬═══╣
-    ║   ║   ║
-    ╚═══╩═══╝
+    Finds optimal choice by item total rate.
 
     1. You need to provide a matrix with item parameters rate.
     ROWS: Items
